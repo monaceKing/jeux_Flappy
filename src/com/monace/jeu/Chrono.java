@@ -2,7 +2,7 @@ package com.monace.jeu;
 
 public class Chrono implements Runnable{
 
-	private final int PAUSE = 10;
+	private final int PAUSE = 5;
 	
 	//Cette methode va être appellée pendant tpout le programme pour faire defilier l'écran
 	@Override
