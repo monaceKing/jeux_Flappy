@@ -4,6 +4,8 @@ import java.awt.Image;
 
 import javax.swing.ImageIcon;
 
+import com.monace.objets.Tuyau;
+
 public class FlappyBird implements Runnable {
 
 	// Variable
@@ -30,7 +32,7 @@ public class FlappyBird implements Runnable {
 		this.imgOiseau = this.icoOiseau.getImage();
 		Thread chronoAilles = new Thread(this);
 		chronoAilles.start();
-		
+
 	}
 
 	// Geutters
@@ -64,23 +66,37 @@ public class FlappyBird implements Runnable {
 	}
 
 	// Methodes
-	public void monte() {this.dy = 50;}
-	
-	
+	public void monte() {
+		this.dy = 50;
+	}
+
 	private void batDesAilles(int dy) {
-		if(dy > 10) {
-		this.icoOiseau = new ImageIcon(getClass().getResource("/images/oiseau2.png"));
-		this.imgOiseau = this.icoOiseau.getImage();
-		this.y = this.y - 3;
-		}else if(dy > 5) {
+		if (dy > 10) {
+			this.icoOiseau = new ImageIcon(getClass().getResource("/images/oiseau2.png"));
+			this.imgOiseau = this.icoOiseau.getImage();
+			this.y = this.y - 3;
+		} else if (dy > 5) {
 			this.y = this.y - 2;
-		}else if(dy > 1) {
+		} else if (dy > 1) {
 			this.y = this.y - 1;
-		} else if(dy == 1) {
+		} else if (dy == 1) {
 			this.icoOiseau = new ImageIcon(getClass().getResource("/images/oiseau1.png"));
 			this.imgOiseau = this.icoOiseau.getImage();
 		}
 	}
+	
+	
+	public boolean collision(Tuyau tuyau){
+		if(tuyau.getY() < 50){ // d�tecte un tuyau haut
+			if(this.y <= tuyau.getY() + tuyau.getHauteur() && this.x + this.largeur >= tuyau.getX() && 
+					this.x <= tuyau.getX() + tuyau.getLargeur()){return true;}
+			else{return false;}
+		}else // sinon test avec tuyau bas
+			if(this.y + this.hauteur >= tuyau.getY() && this.x + this.largeur >= tuyau.getX() && 
+			this.x <= tuyau.getX() + tuyau.getLargeur()){return true;}
+		     else{return false;}
+	}
+	
 
 	@Override
 	public void run() {

@@ -34,6 +34,7 @@ public class Scene extends JPanel{
 	
 	public int xFond;
 	private int xTuyaux; // gère la position des tuyaux sur l'écran
+	public boolean finDuJeu;
 	private Random hasard;//pour que la position des tuyaux apparaissent de façon aléatoires 
 	
 	
@@ -44,7 +45,8 @@ public class Scene extends JPanel{
 		this.iconBandeFond = new ImageIcon (getClass().getResource("/images/bandeFondEcran.png"));
 		this.imgBandeFond = this.iconBandeFond.getImage();
 		this.xFond = 0;
-		this.xTuyaux = 100;
+		this.xTuyaux = 400;
+		this.finDuJeu = false;
 		
 		this.tuyauHauteur1 = new Tuyau(this.xTuyaux, -150, "/images/tuyauHaut.png");
 		this.tuyauBas1 = new Tuyau(this.xTuyaux, 250, "/images/tuyauBas.png");
@@ -118,13 +120,41 @@ public class Scene extends JPanel{
 		g.drawImage(this.tuyauHauteur3.getImgTuyau(), this.tuyauHauteur3.getX(), this.tuyauHauteur3.getY(), null);
 		g.drawImage(this.tuyauBas3.getImgTuyau(), this.tuyauBas3.getX(), this.tuyauBas3.getY(), null);
 		
-
 	}
+	
+	
+	private boolean collisionFlappy(){
+        boolean finDuJeu = false;
+		// proche tuyau1
+		if(this.flappyBird.getX() + this.flappyBird.getLargeur() > this.tuyauBas1.getX() - 20 && 
+				this.flappyBird.getX() < this.tuyauBas1.getX() + this.tuyauBas1.getLargeur() + 20){
+			finDuJeu = this.flappyBird.collision(this.tuyauBas1);
+			if(finDuJeu == false){finDuJeu = this.flappyBird.collision(this.tuyauHauteur1);}
+		}else{
+			// proche tuyau2
+			if(this.flappyBird.getX() + this.flappyBird.getLargeur() > this.tuyauBas2.getX() - 20 && this.flappyBird.getX() < this.tuyauBas2.getX() + this.tuyauBas2.getLargeur() + 20){
+				finDuJeu = this.flappyBird.collision(this.tuyauBas2);
+				if(finDuJeu == false){finDuJeu = this.flappyBird.collision(this.tuyauHauteur2);}			
+		    }else{
+				// proche tuyau3
+			    if(this.flappyBird.getX() + this.flappyBird.getLargeur() > this.tuyauBas3.getX() - 20 && this.flappyBird.getX() < this.tuyauBas3.getX() + this.tuyauBas3.getLargeur() + 20){
+			    	finDuJeu = this.flappyBird.collision(this.tuyauBas3);
+				    if(finDuJeu == false){finDuJeu = this.flappyBird.collision(this.tuyauHauteur3);}
+			}else{
+				// contact avec le plafond ou le sol
+				if(this.flappyBird.getY() < 0 || this.flappyBird.getY() + this.flappyBird.getHauteur() > 355){finDuJeu = true;}else{finDuJeu = false;}
+		        }
+		    }
+	    }
+		return finDuJeu;
+	}
+	
 	
 	//Ajout des composant pour le deffilement de l'écran
 	public void paintComponent(Graphics g) {
 		this.deplacementFond(g);
 		this.deplacementTuyaux(g);
+		this.finDuJeu = this.collisionFlappy();//Verification si l'oiseau rentre en collision avec le sol ou le plafond 
 		this.flappyBird.setY(this.flappyBird.getY() + 1);
 		g.drawImage(this.flappyBird.getImgOiseau(), this.flappyBird.getX(), this.flappyBird.getY(), null);
 	}
