@@ -1,5 +1,6 @@
 package com.monace.jeu;
 
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.Random;
@@ -26,7 +27,8 @@ public class Scene extends JPanel{
 	
 	
 	public FlappyBird flappyBird;
-	
+	private int score;
+	private Font police;
 	
 	private final int LARGEUR_BANDE_FOND = 140;
 	private final int DISTANCE_TUYAUX = 250;
@@ -63,6 +65,9 @@ public class Scene extends JPanel{
 		this.requestFocusInWindow();
 		//System.out.println("Clavier ajouté à la scène.");
 	    this.addKeyListener(new Clavier());
+	    
+	    this.score = 0;
+	    this.police = new Font("Arial", Font.PLAIN, 40);
 		
 		Thread chronoEcran = new Thread(new Chrono());
 		chronoEcran.start();//Nous permet de demarer le jeu.
@@ -150,13 +155,33 @@ public class Scene extends JPanel{
 	}
 	
 	
+	private void score() {
+		if(
+				this.tuyauBas1.getX() + this.tuyauBas1.getLargeur() == 95 || 
+				this.tuyauBas2.getX() + this.tuyauBas2.getLargeur() == 95 || 
+				this.tuyauBas3.getX() + this.tuyauBas3.getLargeur() == 95) {
+			this.score++;
+			Audio.playsSound("/audio/sonnerie.wav");
+		}
+	}
+	
+	
+	
+	
 	//Ajout des composant pour le deffilement de l'écran
 	public void paintComponent(Graphics g) {
 		this.deplacementFond(g);
 		this.deplacementTuyaux(g);
+		this.score();
+		g.setFont(police);
+		g.drawString("" + score,140 , 50);
 		this.finDuJeu = this.collisionFlappy();//Verification si l'oiseau rentre en collision avec le sol ou le plafond 
 		this.flappyBird.setY(this.flappyBird.getY() + 1);
 		g.drawImage(this.flappyBird.getImgOiseau(), this.flappyBird.getX(), this.flappyBird.getY(), null);
+		if(this.finDuJeu == true) {
+			g.drawString("Fin du jeu", 60, 200);
+			Audio.playsSound("/audio/choc.wav");
+		}
 	}
 	
 	
