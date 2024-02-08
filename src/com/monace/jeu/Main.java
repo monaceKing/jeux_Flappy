@@ -10,7 +10,6 @@ public class Main {
 		
 		fenetre = new JFrame("Zéro Distraction");
 		scene = new Scene();
-		
 		fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		fenetre.setSize(300, 425);
 		fenetre.setLocationRelativeTo(null);

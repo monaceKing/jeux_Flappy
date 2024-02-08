@@ -7,6 +7,8 @@ import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
+import com.mathmaurer.personnages.Clavier;
+import com.mathmaurer.personnages.FlappyBird;
 import com.monace.objets.Tuyau;
 
 public class Scene extends JPanel{
@@ -23,12 +25,14 @@ public class Scene extends JPanel{
 	public Tuyau tuyauBas3;
 	
 	
+	public FlappyBird flappyBird;
+	
+	
 	private final int LARGEUR_BANDE_FOND = 140;
 	private final int DISTANCE_TUYAUX = 250;
 	private final int ECART_TUYAUX = 120;
 	
 	public int xFond;
-	private int dxTuyaux;// le deplacement des tuyaux
 	private int xTuyaux; // gère la position des tuyaux sur l'écran
 	private Random hasard;//pour que la position des tuyaux apparaissent de façon aléatoires 
 	
@@ -41,7 +45,6 @@ public class Scene extends JPanel{
 		this.imgBandeFond = this.iconBandeFond.getImage();
 		this.xFond = 0;
 		this.xTuyaux = 100;
-		this.dxTuyaux = 0;
 		
 		this.tuyauHauteur1 = new Tuyau(this.xTuyaux, -150, "/images/tuyauHaut.png");
 		this.tuyauBas1 = new Tuyau(this.xTuyaux, 250, "/images/tuyauBas.png");
@@ -50,7 +53,14 @@ public class Scene extends JPanel{
 		this.tuyauHauteur3 = new Tuyau(this.xTuyaux + this.DISTANCE_TUYAUX *2, -120, "/images/tuyauHaut.png");
 		this.tuyauBas3 = new Tuyau(this.xTuyaux + this.DISTANCE_TUYAUX *2, 280, "/images/tuyauBas.png");
 		
+		this.flappyBird = new FlappyBird(100, 150, "/images/oiseau1.png");
+		
 		hasard = new Random();
+		
+		this.setFocusable(true);
+		this.requestFocusInWindow();
+		//System.out.println("Clavier ajouté à la scène.");
+	    this.addKeyListener(new Clavier());
 		
 		Thread chronoEcran = new Thread(new Chrono());
 		chronoEcran.start();//Nous permet de demarer le jeu.
@@ -115,7 +125,9 @@ public class Scene extends JPanel{
 	public void paintComponent(Graphics g) {
 		this.deplacementFond(g);
 		this.deplacementTuyaux(g);
-}
+		this.flappyBird.setY(this.flappyBird.getY() + 1);
+		g.drawImage(this.flappyBird.getImgOiseau(), this.flappyBird.getX(), this.flappyBird.getY(), null);
+	}
 	
 	
 }
